@@ -372,12 +372,31 @@ QuickSelect is faster on average: O(n)`
             ))}
           </div>
 
-          {/* Dynamic Question */}
-          <p>
-            {difficulty === "easy" && `Where will we go next? (Left / Pivot / Right)`}
-            {difficulty === "medium" && `How many elements are smaller than pivot ${step.pivot}?`}
-            {difficulty === "hard" && `What will be the next k value after this step?`}
-          </p>
+          {/* Dynamic Question Pool */}
+          {(() => {
+            const questionPools = {
+              easy: [
+                "Where will we go next? (Left / Pivot / Right)",
+                "Which side contains the answer?",
+                "Is the answer in LEFT, RIGHT, or at the PIVOT?"
+              ],
+              medium: [
+                `How many elements are smaller than pivot ${step.pivot}?`,
+                `Count elements less than ${step.pivot}`,
+                `Size of LEFT partition?`
+              ],
+              hard: [
+                "What will be the next k value after this step?",
+                "After moving partitions, what is the updated k?",
+                "What k do we use in the next recursive call?"
+              ]
+            };
+
+            const questions = questionPools[difficulty];
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+
+            return <p>{randomQuestion}</p>;
+          })()}
 
           {/* Answer Buttons */}
           <div style={{ marginTop: "15px" }}>
