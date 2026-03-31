@@ -195,6 +195,24 @@ const algorithms = {
 };
 
 export default function App() {
+  // Real-time complexity/input size graph state
+  const [inputSize, setInputSize] = useState(10);
+  const generatePerformanceData = () => {
+    const sizes = [5, 10, 20, 40, 80];
+    return sizes.map(n => {
+      return {
+        size: n,
+        quickselect: n,
+        mergesort: n * Math.log2(n),
+        quicksort: n * Math.log2(n),
+        bubblesort: n * n
+      };
+    });
+  };
+  const performanceData = generatePerformanceData();
+
+  // Side-by-side algorithm comparison state
+  const [compareAlgo, setCompareAlgo] = useState("mergesort");
   const generateRandomArray = () => {
     const size = Math.floor(Math.random() * 5) + 5; // 5 to 9 elements
     return Array.from({ length: size }, () => Math.floor(Math.random() * 50) + 1).join(",");
@@ -836,6 +854,96 @@ Compare this with other algorithms in the graph below.`
           Lower bars indicate better (faster average performance)
         </p>
 
+      </div>
+
+      {/* Performance Graph */}
+      <div style={{
+        marginTop: "40px",
+        background: "rgba(30,41,59,0.6)",
+        padding: "20px",
+        borderRadius: "14px",
+        width: "100%",
+        maxWidth: "1000px"
+      }}>
+
+      <h3 style={{ color: "#38bdf8" }}>Performance vs Input Size</h3>
+
+      <div style={{ display: "flex", justifyContent: "space-around", alignItems: "end", height: "200px" }}>
+
+      {performanceData.map((point, i) => (
+        <div key={i} style={{ textAlign: "center" }}>
+
+          <div style={{ display: "flex", gap: "4px", alignItems: "end" }}>
+
+            <div style={{
+              height: `${point.quickselect}px`,
+              width: "8px",
+              background: "#22c55e"
+            }} />
+
+            <div style={{
+              height: `${point.mergesort / 2}px`,
+              width: "8px",
+              background: "#3b82f6"
+            }} />
+
+            <div style={{
+              height: `${point.bubblesort / 20}px`,
+              width: "8px",
+              background: "#ef4444"
+            }} />
+
+          </div>
+
+          <span style={{ fontSize: "12px" }}>{point.size}</span>
+
+        </div>
+      ))}
+
+      </div>
+
+      <p style={{ marginTop: "10px", fontSize: "12px", color: "#94a3b8" }}>
+        Green: QuickSelect | Blue: MergeSort | Red: BubbleSort
+      </p>
+
+      </div>
+
+      {/* Side-by-Side Comparison */}
+      <div style={{
+        marginTop: "40px",
+        background: "rgba(30,41,59,0.6)",
+        padding: "20px",
+        borderRadius: "14px",
+        width: "100%",
+        maxWidth: "1000px"
+      }}>
+
+      <h3 style={{ color: "#facc15" }}>Compare Algorithms</h3>
+
+      <div style={{ marginBottom: "10px" }}>
+        <span>Select algorithm to compare: </span>
+        <select
+          value={compareAlgo}
+          onChange={(e) => setCompareAlgo(e.target.value)}
+          style={{ padding: "6px", borderRadius: "6px" }}
+        >
+          {Object.keys(algorithms).map(key => (
+            <option key={key} value={key}>{algorithms[key].name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
+        <div>
+          <h4 style={{ color: "#22c55e" }}>{algorithms[algorithm].name}</h4>
+          <p>{algorithms[algorithm].desc}</p>
+        </div>
+
+        <div>
+          <h4 style={{ color: "#3b82f6" }}>{algorithms[compareAlgo].name}</h4>
+          <p>{algorithms[compareAlgo].desc}</p>
+        </div>
+      </div>
       </div>
     </div>
   );
