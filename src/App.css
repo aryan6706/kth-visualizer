@@ -54,13 +54,6 @@ body {
   border: 1px solid var(--border);
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   margin-top: 20px;
-  transition: transform 0.2s ease, box-shadow 0.3s ease, border 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.15);
 }
 
 /* ================= INPUT SECTION ================= */
@@ -96,12 +89,8 @@ button {
 }
 
 button:hover {
-  transform: translateY(-2px) scale(1.02);
-  opacity: 0.95;
-}
-
-button:focus {
-  outline: 2px solid var(--primary);
+  transform: translateY(-1px);
+  opacity: 0.9;
 }
 
 button:active {
@@ -157,18 +146,6 @@ button:active {
   padding: 24px;
   margin-top: 30px;
   border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.bar {
-  transition: height 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.bar:hover {
-  transform: scale(1.05);
 }
 
 /* ================= TEXT ================= */
@@ -185,11 +162,8 @@ h3 {
   font-size: 18px;
 }
 
-/* ================= TEXT ================= */
-
 p {
   color: var(--text-muted);
-  line-height: 1.6;
 }
 
 /* ================= RESPONSIVE ================= */
@@ -202,22 +176,4 @@ p {
   .card {
     padding: 16px;
   }
-}
-/* ================= UTILITY CLASSES ================= */
-.mt-10 { margin-top: 10px; }
-.mt-20 { margin-top: 20px; }
-.center { text-align: center; }
-
-/* ================= SCROLLBAR STYLING ================= */
-::-webkit-scrollbar {
-  height: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
 }

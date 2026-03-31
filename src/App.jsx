@@ -463,7 +463,18 @@ Time Complexity: O(n log n)`
   });
 
   return (
-    <div className="app-container">
+    <div style={{
+      minHeight: "100vh",
+      width: "100%",
+      boxSizing: "border-box",
+      background: "linear-gradient(to bottom, #020617, #0f172a)",
+      color: "white",
+      padding: "20px",
+      fontFamily: "system-ui",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    }}>
 
       <div style={{ textAlign: "center", marginBottom: "30px" }}>
         <h1 style={{ fontSize: "42px", fontWeight: "bold" }}>
@@ -474,7 +485,15 @@ Time Complexity: O(n log n)`
         </p>
       </div>
 
-      <div className="card">
+      <div style={{
+        background: "rgba(30,41,59,0.6)",
+        padding: "20px",
+        borderRadius: "12px",
+        backdropFilter: "blur(10px)",
+        width: "100%",
+        maxWidth: "800px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+      }}>
         <div style={{ marginBottom: "15px", textAlign: "center" }}>
           <label style={{ marginRight: "10px" }}>Algorithm:</label>
           <select
@@ -492,7 +511,12 @@ Time Complexity: O(n log n)`
             {algorithms[algorithm].desc}
           </p>
         </div>
-        <div className="input-section">
+        <div style={{
+          display: "flex",
+          gap: "10px",
+          justifyContent: "center",
+          flexWrap: "wrap"
+        }}>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -504,7 +528,10 @@ Time Complexity: O(n log n)`
             onChange={(e) => setK(Number(e.target.value))}
             style={{ padding: "10px", borderRadius: "8px", border: "none", width: "100px" }}
           />
-          <button onClick={handleRun} className="btn-success">
+          <button
+            onClick={handleRun}
+            style={{ background: "#22c55e", border: "none", borderRadius: "8px", padding: "10px 16px", fontWeight: "bold", cursor: "pointer" }}
+          >
             Run
           </button>
         </div>
@@ -559,8 +586,8 @@ Time Complexity: O(n log n)`
 
       {steps.length > 0 && (
         <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "20px", flexWrap: "wrap" }}>
-          <button onClick={() => setCurrentStep(prev => Math.max(prev - 1, 0))} className="btn-primary">⏮ Prev</button>
-          <button onClick={() => setPlaying(!playing)} className="btn-primary" style={{ background: playing ? "#ef4444" : undefined }}>
+          <button onClick={() => setCurrentStep(prev => Math.max(prev - 1, 0))} style={controlBtn}>⏮ Prev</button>
+          <button onClick={() => setPlaying(!playing)} style={{ ...controlBtn, background: playing ? "#ef4444" : "#3b82f6" }}>
             {playing ? "⏸ Pause" : "▶ Play"}
           </button>
           <button
@@ -572,13 +599,13 @@ Time Complexity: O(n log n)`
                 setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
               }
             }}
-            className="btn-primary"
+            style={controlBtn}
           >
             Next ⏭
           </button>
           <button
             onClick={() => setLearnMode(!learnMode)}
-            className="btn-warning"
+            style={{ ...controlBtn, background: learnMode ? "#a855f7" : "#334155" }}
           >
             {learnMode ? "Learn Mode ON" : "Learn Mode OFF"}
           </button>
@@ -588,9 +615,9 @@ Time Complexity: O(n log n)`
       {steps.length > 0 && (
         <div style={{ textAlign: "center", marginTop: "15px" }}>
           <span style={{ marginRight: "10px" }}>Speed:</span>
-          <button onClick={() => setSpeed(2000)} className="btn-warning">Slow</button>
-          <button onClick={() => setSpeed(1200)} className="btn-warning">Normal</button>
-          <button onClick={() => setSpeed(500)} className="btn-warning">Fast</button>
+          <button onClick={() => setSpeed(2000)} style={speedBtn(speed === 2000)}>Slow</button>
+          <button onClick={() => setSpeed(1200)} style={speedBtn(speed === 1200)}>Normal</button>
+          <button onClick={() => setSpeed(500)} style={speedBtn(speed === 500)}>Fast</button>
         </div>
       )}
 
@@ -661,7 +688,7 @@ Time Complexity: O(n log n)`
           <div style={{ marginTop: "15px" }}>
 
             {difficulty === "easy" && ["left", "pivot", "right"].map(choice => (
-              <button key={choice} className="btn-primary" style={{ margin: "5px" }}
+              <button key={choice} style={{ ...controlBtn, margin: "5px" }}
                 onClick={() => {
                   const correct = getCorrectDirection(step);
                   const isCorrect = choice === correct;
@@ -774,7 +801,15 @@ Time Complexity: O(n log n)`
       )}
 
       {step && (
-        <div className="graph-container">
+        <div style={{
+          marginTop: "40px",
+          width: "100%",
+          maxWidth: "1000px",
+          background: "rgba(30,41,59,0.6)",
+          padding: "20px",
+          borderRadius: "14px",
+          backdropFilter: "blur(12px)"
+        }}>
 
           <h3 style={{ color: "#facc15", textAlign: "center" }}>
             Step {currentStep + 1} / {steps.length}
@@ -915,7 +950,15 @@ Time Complexity: O(n log n)`
         </div>
       )}
       {/* Time Complexity Comparison Graph */}
-      <div className="graph-container" style={{ marginTop: "50px", textAlign: "center" }}>
+      <div style={{
+        marginTop: "50px",
+        width: "100%",
+        maxWidth: "1000px",
+        background: "rgba(30,41,59,0.6)",
+        padding: "20px",
+        borderRadius: "14px",
+        textAlign: "center"
+      }}>
 
         <h3 style={{ color: "#38bdf8", marginBottom: "20px" }}>
           Time Complexity Comparison (Visual)
@@ -1030,7 +1073,14 @@ Time Complexity: O(n log n)`
       </div>
 
       {/* Performance Graph */}
-      <div className="graph-container">
+      <div style={{
+        marginTop: "40px",
+        background: "rgba(30,41,59,0.6)",
+        padding: "20px",
+        borderRadius: "14px",
+        width: "100%",
+        maxWidth: "1000px"
+      }}>
 
       <h3 style={{ color: "#38bdf8" }}>Performance vs Input Size</h3>
 
@@ -1110,7 +1160,14 @@ Time Complexity: O(n log n)`
       </div>
 
       {/* Side-by-Side Comparison */}
-      <div className="graph-container">
+      <div style={{
+        marginTop: "40px",
+        background: "rgba(30,41,59,0.6)",
+        padding: "20px",
+        borderRadius: "14px",
+        width: "100%",
+        maxWidth: "1000px"
+      }}>
 
       <h3 style={{ color: "#facc15" }}>Compare Algorithms</h3>
 
