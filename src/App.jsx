@@ -822,17 +822,15 @@ Compare this with other algorithms in the graph below.`
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
                   onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                >
-                  {(() => {
-                    if (key === "quickselect") return "O(n)";
-                    if (key === "mergesort") return "O(n log n)";
-                    if (key === "quicksort") return "O(n log n) avg / O(n²) worst";
-                    if (key === "bubblesort") return "O(n²)";
-                    return "O(n log n)";
-                  })()}
+                ></div>
+                <div style={{ fontSize: "12px", color: "#cbd5f5", marginBottom: "6px" }}>
+                  {key === "quickselect" && "O(n)"}
+                  {key === "mergesort" && "O(n log n)"}
+                  {key === "quicksort" && "O(n log n) avg / O(n²)"}
+                  {key === "bubblesort" && "O(n²)"}
+                  {key === "sorting" && "O(n log n)"}
                 </div>
-
-                <span style={{ fontSize: "14px" }}>
+                <span style={{ fontSize: "14px", fontWeight: "600" }}>
                   {algo.name}
                 </span>
                 <p style={{
