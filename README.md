@@ -1,16 +1,101 @@
-# React + Vite
+# 🚀 Kth Smallest Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive web application to visualize how the **QuickSelect algorithm** finds the Kth smallest element efficiently — without sorting the entire array.
 
-Currently, two official plugins are available:
+🌐 Live Demo: https://kth-visualizer.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 📌 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🔍 Algorithm Visualization
+- Step-by-step QuickSelect execution
+- Partition into Left / Pivot / Right
+- Dynamic bar visualization
+- Handles large values with overflow scaling
 
-## Expanding the ESLint configuration
+### 🎮 Controls
+- Play, Pause, Next, Previous
+- Adjustable speed (Slow / Normal / Fast)
+- Supports:
+  - QuickSelect (Optimal)
+  - Sorting (Comparison)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🧠 Learn Mode
+- Detailed explanations at every step
+- Beginner-friendly logic breakdown
+
+### ❓ Quiz System
+- Interactive questions during execution
+- Difficulty levels:
+  - Easy (direction-based)
+  - Medium (count-based)
+  - Hard (logic-based)
+- Score and streak tracking
+- Explanation for wrong answers
+
+### 📊 UI Features
+- Fully responsive design
+- Random test cases on load
+- Randomized K value
+- Clean educational interface
+
+---
+
+## 🧠 QuickSelect
+
+QuickSelect finds the Kth smallest element efficiently.
+
+- Average Time Complexity: O(n)
+- Works by:
+  1. Choosing a pivot
+  2. Partitioning elements
+  3. Searching only relevant part
+
+---
+
+## ⚙️ Tech Stack
+
+- React (Vite)
+- JavaScript
+- CSS
+- Vercel
+
+---
+
+## 📦 Run Locally
+
+```bash
+git clone https://github.com/aryan6706/kth-visualizer.git
+cd kth-visualizer
+npm install
+npm run dev
+
+⸻
+
+🌐 Deployment
+
+Deployed on Vercel
+Auto-deploys on every push to main
+
+⸻
+
+🎯 Use Cases
+	•	DSA learning
+	•	Interview preparation
+	•	Teaching algorithms
+	•	Visual learning
+
+⸻
+
+👨‍💻 Author
+
+Aryan Shrivastava
+https://github.com/aryan6706
+
+⸻
+
+⭐ Support
+
+If you like this project, give it a star ⭐
+
