@@ -197,15 +197,18 @@ const algorithms = {
 export default function App() {
   // Real-time complexity/input size graph state
   const [inputSize, setInputSize] = useState(10);
+  // Log scale toggle for performance graph
+  const [useLogScale, setUseLogScale] = useState(false);
   const generatePerformanceData = () => {
-    const sizes = [5, 10, 20, 40, 80];
+    const sizes = Array.from({ length: 5 }, (_, i) => Math.floor(inputSize * (i + 1) / 5));
     return sizes.map(n => {
+      const effectiveK = Math.min(k || 1, n);
       return {
         size: n,
-        quickselect: n,
-        mergesort: n * Math.log2(n),
-        quicksort: n * Math.log2(n),
-        bubblesort: n * n
+        quickselect: n, // O(n)
+        mergesort: n * Math.log2(n), // O(n log n)
+        quicksort: n * Math.log2(n), // avg
+        bubblesort: n * n // O(n²)
       };
     });
   };
@@ -868,37 +871,72 @@ Compare this with other algorithms in the graph below.`
 
       <h3 style={{ color: "#38bdf8" }}>Performance vs Input Size</h3>
 
+      {/* Input size slider */}
+      <div style={{ marginBottom: "15px", textAlign: "center" }}>
+        <label style={{ marginRight: "10px" }}>
+          Input Size (n): <strong>{inputSize}</strong>
+        </label>
+        <input
+          type="range"
+          min="5"
+          max="200"
+          value={inputSize}
+          onChange={(e) => setInputSize(Number(e.target.value))}
+          style={{ width: "200px", cursor: "pointer" }}
+        />
+      </div>
+
+      {/* Log scale toggle button */}
+      <div style={{ marginBottom: "10px" }}>
+        <button
+          onClick={() => setUseLogScale(prev => !prev)}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "6px",
+            border: "none",
+            background: useLogScale ? "#22c55e" : "#334155",
+            color: "white",
+            cursor: "pointer"
+          }}
+        >
+          {useLogScale ? "Log Scale ON" : "Log Scale OFF"}
+        </button>
+      </div>
+
       <div style={{ display: "flex", justifyContent: "space-around", alignItems: "end", height: "180px", overflow: "hidden" }}>
 
-      {performanceData.map((point, i) => (
-        <div key={i} style={{ textAlign: "center" }}>
-
-          <div style={{ display: "flex", gap: "4px", alignItems: "end" }}>
-
-            <div style={{
-              height: `${Math.min(point.quickselect * 2, 150)}px`,
-              width: "8px",
-              background: "#22c55e"
-            }} />
-
-            <div style={{
-              height: `${Math.min(point.mergesort / 4, 150)}px`,
-              width: "8px",
-              background: "#3b82f6"
-            }} />
-
-            <div style={{
-              height: `${Math.min(point.bubblesort / 40, 150)}px`,
-              width: "8px",
-              background: "#ef4444"
-            }} />
-
+      {(() => {
+        const maxVal = Math.max(
+          ...performanceData.map(p =>
+            Math.max(p.quickselect, p.mergesort, p.bubblesort)
+          )
+        );
+        return performanceData.map((point, i) => (
+          <div key={i} style={{ textAlign: "center" }}>
+            <div style={{ display: "flex", gap: "4px", alignItems: "end" }}>
+              <div style={{
+                height: `${((useLogScale ? Math.log(point.quickselect + 1) : point.quickselect) /
+                  (useLogScale ? Math.log(maxVal + 1) : maxVal)) * 150}px`,
+                width: "8px",
+                background: "#22c55e"
+              }} />
+              <div style={{
+                height: `${((useLogScale ? Math.log(point.mergesort + 1) : point.mergesort) /
+                  (useLogScale ? Math.log(maxVal + 1) : maxVal)) * 150}px`,
+                width: "8px",
+                background: "#3b82f6"
+              }} />
+              <div style={{
+                height: `${((useLogScale ? Math.log(point.bubblesort + 1) : point.bubblesort) /
+                  (useLogScale ? Math.log(maxVal + 1) : maxVal)) * 150}px`,
+                width: "8px",
+                background: "#ef4444"
+              }} />
+            </div>
+            <span style={{ fontSize: "12px" }}>{point.size}</span>
           </div>
-
-          <span style={{ fontSize: "12px" }}>{point.size}</span>
-
-        </div>
-      ))}
+        ));
+      })()}
 
       </div>
 
