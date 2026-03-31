@@ -104,6 +104,66 @@ Now search ${newK}th smallest in RIGHT
   }
 }
 
+function mergeSortSteps(arr, steps) {
+  if (arr.length <= 1) return arr;
+  const mid = Math.floor(arr.length / 2);
+  const left = arr.slice(0, mid);
+  const right = arr.slice(mid);
+
+  steps.push({
+    arr: [...arr],
+    pivot: "-",
+    left: [...left],
+    right: [...right],
+    explanation: `Merge Sort Split:\n\nSplit into LEFT and RIGHT halves.`
+  });
+
+  const sortedLeft = mergeSortSteps(left, steps);
+  const sortedRight = mergeSortSteps(right, steps);
+
+  // merge step (simple visualization)
+  const merged = [];
+  let i = 0, j = 0;
+  while (i < sortedLeft.length && j < sortedRight.length) {
+    if (sortedLeft[i] < sortedRight[j]) merged.push(sortedLeft[i++]);
+    else merged.push(sortedRight[j++]);
+  }
+  while (i < sortedLeft.length) merged.push(sortedLeft[i++]);
+  while (j < sortedRight.length) merged.push(sortedRight[j++]);
+
+  steps.push({
+    arr: [...merged],
+    pivot: "-",
+    left: [],
+    right: [],
+    explanation: `Merging:\n\nCombine sorted halves → [${merged.join(", ")}]`
+  });
+
+  return merged;
+}
+
+function quickSortSteps(arr, steps) {
+  if (arr.length <= 1) return arr;
+
+  const pivot = arr[arr.length - 1];
+  const left = arr.filter(x => x < pivot);
+  const equal = arr.filter(x => x === pivot);
+  const right = arr.filter(x => x > pivot);
+
+  steps.push({
+    arr: [...arr],
+    pivot,
+    left,
+    right,
+    explanation: `Quick Sort Partition:\n\nPivot = ${pivot}\nSplit into LEFT and RIGHT.`
+  });
+
+  const sortedLeft = quickSortSteps(left, steps);
+  const sortedRight = quickSortSteps(right, steps);
+
+  return [...sortedLeft, ...equal, ...sortedRight];
+}
+
 export default function App() {
   const generateRandomArray = () => {
     const size = Math.floor(Math.random() * 5) + 5; // 5 to 9 elements
@@ -135,6 +195,33 @@ export default function App() {
 
   // NEW: algorithm state
   const [algorithm, setAlgorithm] = useState("quickselect");
+  const algorithms = {
+  quickselect: {
+    name: "QuickSelect",
+    desc: "Efficient selection algorithm to find kth smallest element in O(n) average time.",
+    complexity: 50
+  },
+  sorting: {
+    name: "Sorting",
+    desc: "Sort the entire array and pick kth element. Simple but slower.",
+    complexity: 80
+  },
+  mergesort: {
+    name: "Merge Sort",
+    desc: "Divide and conquer algorithm with guaranteed O(n log n).",
+    complexity: 80
+  },
+  quicksort: {
+    name: "Quick Sort",
+    desc: "Fast average sorting but worst case O(n²).",
+    complexity: 90
+  },
+  bubblesort: {
+    name: "Bubble Sort",
+    desc: "Very simple but inefficient algorithm with O(n²).",
+    complexity: 150
+  }
+};
 
   // NEW states for quiz system
   const [score, setScore] = useState(0);
@@ -148,6 +235,12 @@ export default function App() {
     let res;
     if (algorithm === "quickselect") {
       res = quickSelect(arr, k, stepLog);
+    } else if (algorithm === "mergesort") {
+      const sorted = mergeSortSteps(arr, stepLog);
+      res = sorted[k - 1];
+    } else if (algorithm === "quicksort") {
+      const sorted = quickSortSteps(arr, stepLog);
+      res = sorted[k - 1];
     } else {
       const sorted = [...arr].sort((a, b) => a - b);
       res = sorted[k - 1];
@@ -157,16 +250,17 @@ export default function App() {
         pivot: "-",
         left: [],
         right: [],
-        explanation: `Sorting Approach:
+        explanation: `${algorithms[algorithm].name} Approach:
 
-We sort the array:
+${algorithms[algorithm].desc}
+
+We simulate using sorting for visualization:
 [${sorted.join(", ")}]
 
-Now pick the ${k}th element -> ${res}
+Result → ${res}
 
-Time Complexity: O(n log n)
-
-QuickSelect is faster on average: O(n)`
+Time Complexity Insight:
+Compare this with other algorithms in the graph below.`
       });
     }
     setSteps(stepLog);
@@ -264,9 +358,15 @@ QuickSelect is faster on average: O(n)`
             onChange={(e) => setAlgorithm(e.target.value)}
             style={{ padding: "8px", borderRadius: "6px" }}
           >
-            <option value="quickselect">QuickSelect (Optimal)</option>
-            <option value="sorting">Sorting (Simple)</option>
+            {Object.keys(algorithms).map(key => (
+              <option key={key} value={key}>
+                {algorithms[key].name}
+              </option>
+            ))}
           </select>
+          <p style={{ marginTop: "10px", color: "#94a3b8" }}>
+            {algorithms[algorithm].desc}
+          </p>
         </div>
         <div style={{
           display: "flex",
@@ -297,6 +397,27 @@ QuickSelect is faster on average: O(n)`
       <h2 style={{ textAlign: "center", marginTop: "25px" }}>
         Result: <span style={{ color: "#22c55e" }}>{result}</span>
       </h2>
+
+      {/* Algorithm Info Panel */}
+      <div style={{
+        marginTop: "20px",
+        background: "#1e293b",
+        padding: "15px",
+        borderRadius: "10px",
+        maxWidth: "800px",
+        width: "100%",
+        textAlign: "center"
+      }}>
+        <h3 style={{ color: "#facc15", marginBottom: "8px" }}>
+          {algorithms[algorithm].name}
+        </h3>
+        <p style={{ color: "#94a3b8", lineHeight: "1.5" }}>
+          {algorithms[algorithm].desc}
+        </p>
+        <p style={{ marginTop: "10px", fontSize: "14px", color: "#cbd5f5" }}>
+          This algorithm is currently selected. Explore its behavior in the steps above and compare its performance in the graph below.
+        </p>
+      </div>
 
       {steps.length > 0 && (
         <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "20px", flexWrap: "wrap" }}>
@@ -490,7 +611,18 @@ QuickSelect is faster on average: O(n)`
           </div>
 
           {feedback && (
-            <p style={{ marginTop: "10px", fontWeight: "bold" }}>{feedback}</p>
+            <div style={{
+              marginTop: "12px",
+              background: "#020617",
+              padding: "12px",
+              borderRadius: "8px",
+              whiteSpace: "pre-line",
+              textAlign: "left",
+              lineHeight: "1.5"
+            }}>
+              <strong style={{ color: "#38bdf8" }}>Feedback:</strong>
+              <div>{feedback}</div>
+            </div>
           )}
 
           {/* History Insight */}
@@ -517,6 +649,20 @@ QuickSelect is faster on average: O(n)`
           <h3 style={{ color: "#facc15", textAlign: "center" }}>
             Step {currentStep + 1} / {steps.length}
           </h3>
+          <div style={{
+            height: "6px",
+            background: "#1e293b",
+            borderRadius: "4px",
+            marginTop: "8px",
+            overflow: "hidden"
+          }}>
+            <div style={{
+              width: `${((currentStep + 1) / steps.length) * 100}%`,
+              height: "100%",
+              background: "#22c55e",
+              transition: "width 0.3s ease"
+            }} />
+          </div>
 
           <div style={{
             display: "flex",
@@ -564,7 +710,8 @@ QuickSelect is faster on average: O(n)`
                   display: "flex",
                   alignItems: "end",
                   justifyContent: "center",
-                  fontWeight: "bold"
+                  fontWeight: "bold",
+                  transition: "height 0.4s ease, background 0.3s ease",
                 }}>
                   {num}
                 </div>
@@ -615,31 +762,70 @@ QuickSelect is faster on average: O(n)`
           height: "200px"
         }}>
 
-          {[ 
-            { name: "QuickSelect", value: 50, color: "#22c55e" },
-            { name: "Merge Sort", value: 80, color: "#3b82f6" },
-            { name: "Quick Sort", value: 80, color: "#facc15" },
-            { name: "Bubble Sort", value: 150, color: "#ef4444" }
-          ].map((algo, i) => (
-            <div key={i} style={{ textAlign: "center" }}>
+          {Object.keys(algorithms).map((key, i) => {
+            const algo = algorithms[key];
+            const colors = ["#22c55e", "#3b82f6", "#facc15", "#ef4444", "#a855f7"];
 
-              <div style={{
-                height: `${algo.value}px`,
-                width: "60px",
-                background: algo.color,
-                borderRadius: "8px",
-                marginBottom: "10px",
-                display: "flex",
-                alignItems: "end",
-                justifyContent: "center",
-                fontSize: "12px"
-              }}>
-                {algo.name === "QuickSelect" ? "O(n)" : "O(n log n) / O(n²)"}
+            return (
+              <div key={i} style={{ textAlign: "center" }}>
+
+                <div
+                  title={`${algo.name} — ${
+                    key === "quickselect"
+                      ? "O(n)"
+                      : key === "mergesort"
+                      ? "O(n log n)"
+                      : key === "quicksort"
+                      ? "O(n log n) avg / O(n²) worst"
+                      : key === "bubblesort"
+                      ? "O(n²)"
+                      : "O(n log n)"
+                  }`}
+                  style={{
+                    height: `${algo.complexity}px`,
+                    width: "60px",
+                    background: key === algorithm ? "#ffffff" : colors[i % colors.length],
+                    borderRadius: "8px",
+                    marginBottom: "10px",
+                    display: "flex",
+                    alignItems: "end",
+                    justifyContent: "center",
+                    fontSize: "12px",
+                    color: key === algorithm ? "black" : "white",
+                    fontWeight: "bold",
+                    transition: "height 0.4s ease, transform 0.2s ease",
+                    cursor: "pointer"
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                >
+                  {(() => {
+                    if (key === "quickselect") return "O(n)";
+                    if (key === "mergesort") return "O(n log n)";
+                    if (key === "quicksort") return "O(n log n) avg / O(n²) worst";
+                    if (key === "bubblesort") return "O(n²)";
+                    return "O(n log n)";
+                  })()}
+                </div>
+
+                <span style={{ fontSize: "14px" }}>
+                  {algo.name}
+                </span>
+                <p style={{
+                  fontSize: "11px",
+                  color: "#94a3b8",
+                  marginTop: "4px"
+                }}>
+                  {key === algorithm
+                    ? "Selected"
+                    : `${Math.abs(algo.complexity - algorithms[algorithm].complexity)} units ${
+                        algo.complexity > algorithms[algorithm].complexity ? "slower" : "faster"
+                      }`}
+                </p>
+
               </div>
-
-              <span style={{ fontSize: "14px" }}>{algo.name}</span>
-            </div>
-          ))}
+            );
+          })}
 
         </div>
 
