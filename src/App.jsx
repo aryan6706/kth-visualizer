@@ -593,6 +593,61 @@ QuickSelect is faster on average: O(n)`
 
         </div>
       )}
+      {/* Time Complexity Comparison Graph */}
+      <div style={{
+        marginTop: "50px",
+        width: "100%",
+        maxWidth: "1000px",
+        background: "rgba(30,41,59,0.6)",
+        padding: "20px",
+        borderRadius: "14px",
+        textAlign: "center"
+      }}>
+
+        <h3 style={{ color: "#38bdf8", marginBottom: "20px" }}>
+          Time Complexity Comparison (Visual)
+        </h3>
+
+        <div style={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "end",
+          height: "200px"
+        }}>
+
+          {[ 
+            { name: "QuickSelect", value: 50, color: "#22c55e" },
+            { name: "Merge Sort", value: 80, color: "#3b82f6" },
+            { name: "Quick Sort", value: 80, color: "#facc15" },
+            { name: "Bubble Sort", value: 150, color: "#ef4444" }
+          ].map((algo, i) => (
+            <div key={i} style={{ textAlign: "center" }}>
+
+              <div style={{
+                height: `${algo.value}px`,
+                width: "60px",
+                background: algo.color,
+                borderRadius: "8px",
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "center",
+                fontSize: "12px"
+              }}>
+                {algo.name === "QuickSelect" ? "O(n)" : "O(n log n) / O(n²)"}
+              </div>
+
+              <span style={{ fontSize: "14px" }}>{algo.name}</span>
+            </div>
+          ))}
+
+        </div>
+
+        <p style={{ marginTop: "15px", color: "#94a3b8", fontSize: "14px" }}>
+          Lower bars indicate better (faster average performance)
+        </p>
+
+      </div>
     </div>
   );
 }
