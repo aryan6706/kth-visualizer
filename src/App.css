@@ -1,57 +1,179 @@
-/* RESET */
+/* ================= GLOBAL RESET ================= */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* FULL SCREEN FIX */
 html, body, #root {
   width: 100%;
   height: 100%;
 }
 
-/* MAIN CONTAINER */
+/* ================= ROOT THEME ================= */
+:root {
+  --bg-dark: #020617;
+  --bg-light: #0f172a;
+  --card: rgba(30, 41, 59, 0.6);
+  --border: rgba(255,255,255,0.08);
+
+  --primary: #3b82f6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #facc15;
+
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+}
+
+/* ================= BODY ================= */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(to bottom, var(--bg-dark), var(--bg-light));
+  color: var(--text-main);
+}
+
+/* ================= MAIN CONTAINER ================= */
 .app-container {
   min-height: 100vh;
   width: 100%;
-  padding: 20px;
-  background: linear-gradient(to bottom, #020617, #0f172a);
-  color: white;
-  font-family: system-ui;
-}
-
-/* INPUTS */
-.input-section {
-  margin: 20px 0;
+  padding: 24px;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
 }
 
-.input-section input {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-}
-
-.input-section button {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  background: #22c55e;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-/* STEPS */
-.steps {
+/* ================= CARD ================= */
+.card {
+  width: 100%;
+  max-width: 900px;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   margin-top: 20px;
 }
 
+/* ================= INPUT SECTION ================= */
+.input-section {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.input-section input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: white;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.input-section input:focus {
+  border-color: var(--primary);
+}
+
+/* ================= BUTTONS ================= */
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-warning {
+  background: var(--warning);
+  color: black;
+}
+
+/* ================= STEPS ================= */
+.steps {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+
 .step-card {
-  background: #1e293b;
-  padding: 15px;
-  margin-bottom: 15px;
+  background: #020617;
+  padding: 16px;
+  margin-bottom: 14px;
   border-radius: 10px;
+  border: 1px solid var(--border);
+  transition: transform 0.2s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ================= GRAPH SECTION ================= */
+.graph-container {
+  width: 100%;
+  max-width: 1000px;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 30px;
+  border: 1px solid var(--border);
+}
+
+/* ================= TEXT ================= */
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+p {
+  color: var(--text-muted);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .input-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card {
+    padding: 16px;
+  }
 }

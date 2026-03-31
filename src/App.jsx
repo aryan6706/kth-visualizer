@@ -974,7 +974,6 @@ Time Complexity: O(n log n)`
           {Object.keys(algorithms).map((key, i) => {
             const algo = algorithms[key];
             const colors = ["#22c55e", "#3b82f6", "#facc15", "#ef4444", "#a855f7"];
-
             return (
               <div
                 key={i}
@@ -982,47 +981,57 @@ Time Complexity: O(n log n)`
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "flex-end",
-                  width: "120px"
+                  justifyContent: "space-between",
+                  width: "140px",
+                  height: "260px"
                 }}
               >
-                <div
-                  title={`${algo.name} — ${
-                    key === "quickselect"
-                      ? "O(n)"
-                      : key === "mergesort"
-                      ? "O(n log n)"
-                      : key === "quicksort"
-                      ? "O(n log n) avg / O(n²) worst"
-                      : key === "bubblesort"
-                      ? "O(n²)"
-                      : "O(n log n)"
-                  }`}
-                  style={{
-                    height: `${algo.complexity}px`,
-                    width: "60px",
-                    background: key === algorithm ? "#ffffff" : colors[i % colors.length],
-                    borderRadius: "8px",
-                    marginBottom: "10px",
-                    display: "flex",
-                    alignItems: "end",
-                    justifyContent: "center",
-                    fontSize: "12px",
-                    color: key === algorithm ? "black" : "white",
-                    fontWeight: "bold",
-                    transition: "height 0.4s ease, transform 0.2s ease",
-                    cursor: "pointer",
-                    margin: "0 auto"
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                ></div>
+                <div style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  height: "160px"
+                }}>
+                  <div
+                    title={`${algo.name} — ${
+                      key === "quickselect"
+                        ? "O(n)"
+                        : key === "mergesort"
+                        ? "O(n log n)"
+                        : key === "quicksort"
+                        ? "O(n log n) avg / O(n²) worst"
+                        : key === "bubblesort"
+                        ? "O(n²)"
+                        : "O(n log n)"
+                    }`}
+                    style={{
+                      height: `${algo.complexity}px`,
+                      width: "60px",
+                      background: key === algorithm ? "#ffffff" : colors[i % colors.length],
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "end",
+                      justifyContent: "center",
+                      fontSize: "12px",
+                      color: key === algorithm ? "black" : "white",
+                      fontWeight: "bold",
+                      transition: "height 0.4s ease, transform 0.2s ease",
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                  />
+                </div>
                 <div style={{
                   fontSize: "12px",
                   color: "#cbd5f5",
-                  marginTop: "4px",
+                  marginTop: "6px",
                   textAlign: "center",
-                  minHeight: "30px"
+                  minHeight: "20px",
+                  whiteSpace: "nowrap",
+                  width: "120px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis"
                 }}>
                   {key === "quickselect" && "O(n)"}
                   {key === "mergesort" && "O(n log n)"}
