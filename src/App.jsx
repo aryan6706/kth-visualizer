@@ -1,17 +1,23 @@
+
 import { useState, useEffect } from "react";
 
-function quickSelect(arr, k, steps) {
+// --- Analytics Helpers ---
+const initOps = () => ({ comparisons: 0, swaps: 0 });
+
+function quickSelect(arr, k, steps, ops) {
   if (arr.length === 1) {
     steps.push({
       arr: [...arr],
       pivot: arr[0],
       left: [],
       right: [],
-      explanation: `🎉 Only one element left (${arr[0]}).\nSo this must be the answer!`
+      explanation: `🎉 Only one element left (${arr[0]}).\nSo this must be the answer!`,
+      currentIndices: [],
     });
     return arr[0];
   }
 
+  ops.comparisons += arr.length; // rough count for partitioning
   const pivot = arr[arr.length - 1];
   const left = arr.filter(x => x < pivot);
   const equal = arr.filter(x => x === pivot);
@@ -67,6 +73,9 @@ Step 4: Decide where the answer is
 Now we decide which side contains our answer:
 `;
 
+  // VISUALIZE COMPARISONS: highlight pivot index as "current"
+  const pivotIndex = arr.length - 1;
+
   if (k <= left.length) {
     explanation += `
 ${left.length} elements are smaller than ${pivot}
@@ -75,8 +84,16 @@ So answer lies in LEFT
 
 -> Move to LEFT
 `;
-    steps.push({ arr: [...arr], pivot, left, right, explanation });
-    return quickSelect(left, k, steps);
+    steps.push({
+      arr: [...arr],
+      pivot,
+      left,
+      right,
+      explanation,
+      currentLine: "partition",
+      currentIndices: [pivotIndex],
+    });
+    return quickSelect(left, k, steps, ops);
 
   } else if (k <= left.length + equal.length) {
     explanation += `
@@ -86,7 +103,15 @@ ${pivot} is the ${k}th smallest element.
 
 Final Answer: ${pivot}
 `;
-    steps.push({ arr: [...arr], pivot, left, right, explanation });
+    steps.push({
+      arr: [...arr],
+      pivot,
+      left,
+      right,
+      explanation,
+      currentLine: "found",
+      currentIndices: [pivotIndex],
+    });
     return pivot;
 
   } else {
@@ -99,68 +124,152 @@ Now search ${newK}th smallest in RIGHT
 
 -> Move to RIGHT
 `;
-    steps.push({ arr: [...arr], pivot, left, right, explanation });
-    return quickSelect(right, newK, steps);
+    steps.push({
+      arr: [...arr],
+      pivot,
+      left,
+      right,
+      explanation,
+      currentLine: "partition",
+      currentIndices: [pivotIndex],
+    });
+    return quickSelect(right, newK, steps, ops);
   }
 }
 
-function mergeSortSteps(arr, steps) {
+function mergeSortSteps(arr, steps, ops) {
   if (arr.length <= 1) return arr;
   const mid = Math.floor(arr.length / 2);
   const left = arr.slice(0, mid);
   const right = arr.slice(mid);
 
+  ops.comparisons += arr.length;
   steps.push({
     arr: [...arr],
     pivot: "-",
     left: [...left],
     right: [...right],
-    explanation: `Merge Sort Split:\n\nSplit into LEFT and RIGHT halves.`
+    explanation: `Merge Sort (Divide & Conquer):
+
+Step 1: Divide
+Split the array into two halves until size = 1.
+LEFT: [${left.join(", ")}]
+RIGHT: [${right.join(", ")}]
+
+Step 2: Recursively sort both halves.
+
+Step 3: Merge
+Combine two sorted halves into one sorted array.
+
+Pseudo Code:
+function mergeSort(arr) {
+  if (arr.length <= 1) return arr;
+  const mid = Math.floor(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid));
+  const right = mergeSort(arr.slice(mid));
+  return merge(left, right);
+}
+
+function merge(left, right) {
+  const result = [];
+  let i = 0, j = 0;
+  while (i < left.length && j < right.length) {
+    if (left[i] < right[j]) result.push(left[i++]);
+    else result.push(right[j++]);
+  }
+  return result.concat(left.slice(i)).concat(right.slice(j));
+}`,
+    currentIndices: [],
   });
 
-  const sortedLeft = mergeSortSteps(left, steps);
-  const sortedRight = mergeSortSteps(right, steps);
+  const sortedLeft = mergeSortSteps(left, steps, ops);
+  const sortedRight = mergeSortSteps(right, steps, ops);
 
   // merge step (simple visualization)
   const merged = [];
   let i = 0, j = 0;
   while (i < sortedLeft.length && j < sortedRight.length) {
+    // ADD SWAP VISUALIZATION (for merge/quick sort conceptual)
+    ops.swaps++;
     if (sortedLeft[i] < sortedRight[j]) merged.push(sortedLeft[i++]);
     else merged.push(sortedRight[j++]);
   }
-  while (i < sortedLeft.length) merged.push(sortedLeft[i++]);
-  while (j < sortedRight.length) merged.push(sortedRight[j++]);
+  while (i < sortedLeft.length) {
+    ops.swaps++;
+    merged.push(sortedLeft[i++]);
+  }
+  while (j < sortedRight.length) {
+    ops.swaps++;
+    merged.push(sortedRight[j++]);
+  }
 
   steps.push({
     arr: [...merged],
     pivot: "-",
     left: [],
     right: [],
-    explanation: `Merging:\n\nCombine sorted halves → [${merged.join(", ")}]`
+    explanation: `Merging Step:
+
+We combine two sorted halves into one sorted array.
+
+Result:
+[${merged.join(", ")}]
+
+This step ensures the array remains sorted at each level of recursion.`,
+    currentIndices: [],
   });
 
   return merged;
 }
 
 
-function quickSortSteps(arr, steps) {
+function quickSortSteps(arr, steps, ops) {
   if (arr.length <= 1) return arr;
 
+  ops.comparisons += arr.length;
   const pivot = arr[arr.length - 1];
   const left = arr.filter(x => x < pivot);
   const equal = arr.filter(x => x === pivot);
   const right = arr.filter(x => x > pivot);
+
+  // VISUALIZE COMPARISONS
+  const pivotIndex = arr.length - 1;
 
   steps.push({
     arr: [...arr],
     pivot,
     left,
     right,
-    explanation: `Quick Sort Partition:\n\nPivot = ${pivot}\nSplit into LEFT and RIGHT.`
+    explanation: `Quick Sort (Divide & Conquer):
+
+Step 1: Choose Pivot
+Pivot = ${pivot}
+
+Step 2: Partition
+LEFT (< pivot): [${left.join(", ")}]
+RIGHT (> pivot): [${right.join(", ")}]
+
+Step 3: Recursively sort LEFT and RIGHT
+
+Step 4: Combine
+Final = LEFT + PIVOT + RIGHT
+
+Pseudo Code:
+function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  const pivot = arr[arr.length - 1];
+  const left = arr.filter(x => x < pivot);
+  const right = arr.filter(x => x > pivot);
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}`,
+    currentIndices: [pivotIndex],
   });
 
-  const sortedLeft = quickSortSteps(left, steps);
-  const sortedRight = quickSortSteps(right, steps);
+  // ADD SWAP VISUALIZATION (for merge/quick sort conceptual)
+  ops.swaps += left.length + right.length;
+
+  const sortedLeft = quickSortSteps(left, steps, ops);
+  const sortedRight = quickSortSteps(right, steps, ops);
 
   return [...sortedLeft, ...equal, ...sortedRight];
 }
@@ -253,44 +362,54 @@ export default function App() {
   const [difficulty, setDifficulty] = useState("easy");
   const [history, setHistory] = useState([]);
 
+  // Operation and space usage states
+  const [operations, setOperations] = useState({ comparisons: 0, swaps: 0 });
+  const [spaceUsage, setSpaceUsage] = useState(0);
+
   const handleRun = () => {
     const arr = input.split(",").map(Number);
     const stepLog = [];
     let res;
+    const ops = initOps();
     if (algorithm === "quickselect") {
-      res = quickSelect(arr, k, stepLog);
+      res = quickSelect(arr, k, stepLog, ops);
     } else if (algorithm === "mergesort") {
-      const sorted = mergeSortSteps(arr, stepLog);
+      const sorted = mergeSortSteps(arr, stepLog, ops);
       res = sorted[k - 1];
     } else if (algorithm === "quicksort") {
-      const sorted = quickSortSteps(arr, stepLog);
+      const sorted = quickSortSteps(arr, stepLog, ops);
       res = sorted[k - 1];
     } else {
       const sorted = [...arr].sort((a, b) => a - b);
       res = sorted[k - 1];
-
       stepLog.push({
         arr: [...arr],
         pivot: "-",
         left: [],
         right: [],
-        explanation: `${algorithms[algorithm].name} Approach:
+        explanation: `${algorithms[algorithm].name} (Conceptual View):
 
 ${algorithms[algorithm].desc}
 
-We simulate using sorting for visualization:
+We simulate using sorting for clarity:
+Sorted Array:
 [${sorted.join(", ")}]
 
-Result → ${res}
+Kth element → ${res}
 
-Time Complexity Insight:
-Compare this with other algorithms in the graph below.`
+Typical Code:
+const sorted = arr.sort((a, b) => a - b);
+const answer = sorted[k - 1];
+
+Time Complexity: O(n log n)`
       });
     }
     setSteps(stepLog);
     setResult(res);
     setCurrentStep(0);
     setPlaying(false);
+    setOperations(ops);
+    setSpaceUsage(arr.length * (algorithm === 'mergesort' ? 2 : 1));
   };
 
   // Helper function for Learn Mode quiz correctness
@@ -422,6 +541,10 @@ Compare this with other algorithms in the graph below.`
         Result: <span style={{ color: "#22c55e" }}>{result}</span>
       </h2>
 
+      <div style={{ marginTop: "10px", textAlign: "center", color: "#cbd5f5" }}>
+        <strong>Operations:</strong> Comparisons: {operations.comparisons} | Swaps: {operations.swaps}
+      </div>
+
       {/* Algorithm Info Panel */}
       <div style={{
         marginTop: "20px",
@@ -441,6 +564,24 @@ Compare this with other algorithms in the graph below.`
         <p style={{ marginTop: "10px", fontSize: "14px", color: "#cbd5f5" }}>
           This algorithm is currently selected. Explore its behavior in the steps above and compare its performance in the graph below.
         </p>
+      </div>
+
+      <div style={{
+        marginTop: "10px",
+        background: "#0f172a",
+        padding: "10px",
+        borderRadius: "8px",
+        textAlign: "center"
+      }}>
+        <strong>Estimated Space Usage:</strong>
+        <div style={{
+          height: "10px",
+          width: `${Math.min(spaceUsage, 200)}px`,
+          background: "#22c55e",
+          margin: "8px auto",
+          borderRadius: "5px"
+        }} />
+        <span>{spaceUsage} units</span>
       </div>
 
       {steps.length > 0 && (
@@ -706,10 +847,16 @@ Compare this with other algorithms in the graph below.`
 
               let height = num > displayMax ? MAX_BAR_HEIGHT : num * scale;
 
+              // HIGHLIGHT CURRENT ELEMENTS IN UI
+              const isActive = step.currentIndices && step.currentIndices.includes(idx);
+
               let color = "#64748b";
 
-              // Priority 1: Pivot (always highest priority)
-              if (num === step.pivot) {
+              if (isActive) {
+                color = "#38bdf8"; // blue highlight for active comparison
+              }
+              // Priority 1: Pivot (always highest priority, unless active)
+              else if (num === step.pivot) {
                 color = "#facc15";
               }
               // Priority 2: Overflow (only if NOT pivot)
@@ -735,7 +882,9 @@ Compare this with other algorithms in the graph below.`
                   alignItems: "end",
                   justifyContent: "center",
                   fontWeight: "bold",
-                  transition: "height 0.4s ease, background 0.3s ease",
+                  boxShadow: isActive ? "0 0 20px #38bdf8" : "none",
+                  transform: isActive ? "scale(1.1)" : "scale(1)",
+                  transition: "height 0.4s ease, background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease",
                 }}>
                   {num}
                 </div>
@@ -750,6 +899,7 @@ Compare this with other algorithms in the graph below.`
             <span style={{ margin: "0 8px", color: "#ef4444" }}>⬤ Right</span>
             <span style={{ margin: "0 8px", color: "#facc15" }}>⬤ Pivot</span>
             <span style={{ margin: "0 8px", color: "#a855f7" }}>⬤ Overflow</span>
+            <span style={{ margin: "0 8px", color: "#38bdf8" }}>⬤ Active</span>
           </div>
 
           <div style={{ marginTop: "20px", textAlign: "center" }}>
@@ -760,6 +910,41 @@ Compare this with other algorithms in the graph below.`
 
           <div style={{ background: "#020617", padding: "18px", borderRadius: "10px", marginTop: "20px", whiteSpace: "pre-line" }}>
             <p style={{ color: "#38bdf8" }}>{step.explanation}</p>
+          </div>
+
+          <div style={{
+            marginTop: "15px",
+            background: "#020617",
+            padding: "12px",
+            borderRadius: "8px",
+            fontFamily: "monospace",
+            fontSize: "13px",
+            textAlign: "left"
+          }}>
+            <strong style={{ color: "#facc15" }}>Code Execution (Conceptual):</strong>
+            <pre style={{ whiteSpace: "pre-wrap", color: "#22c55e" }}>
+{algorithm === "quickselect" && `function quickSelect(arr, k) {
+  pivot = choosePivot(arr)      ${step.currentLine === "partition" ? "<--" : ""}
+  left = arr < pivot
+  right = arr > pivot
+  if (k <= left.length) go LEFT
+  else if (...) return pivot    ${step.currentLine === "found" ? "<--" : ""}
+  else go RIGHT
+}`}
+
+{algorithm === "mergesort" && `function mergeSort(arr) {
+  split array                   ${step.currentLine === "partition" ? "<--" : ""}
+  recursively sort halves
+  merge sorted halves
+}`}
+
+{algorithm === "quicksort" && `function quickSort(arr) {
+  pick pivot                   ${step.currentLine === "partition" ? "<--" : ""}
+  partition array
+  recursively sort
+  combine results
+}`}
+            </pre>
           </div>
 
         </div>
