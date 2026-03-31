@@ -400,12 +400,6 @@ QuickSelect is faster on average: O(n)`
                   }
 
                   setHistory(prev => [...prev, { difficulty, correct: isCorrect }]);
-
-                  setTimeout(() => {
-                    setAwaitingAnswer(false);
-                    setFeedback("");
-                    setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
-                  }, 1200);
                 }}
               >{choice.toUpperCase()}</button>
             ))}
@@ -433,12 +427,6 @@ QuickSelect is faster on average: O(n)`
                     }
 
                     setHistory(prev => [...prev, { difficulty, correct: isCorrect }]);
-
-                    setTimeout(() => {
-                      setAwaitingAnswer(false);
-                      setFeedback("");
-                      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
-                    }, 1200);
                   }
                 }}
                 style={{ padding: "8px", borderRadius: "6px" }}
@@ -474,12 +462,6 @@ QuickSelect is faster on average: O(n)`
                     }
 
                     setHistory(prev => [...prev, { difficulty, correct: isCorrect }]);
-
-                    setTimeout(() => {
-                      setAwaitingAnswer(false);
-                      setFeedback("");
-                      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
-                    }, 1500);
                   }
                 }}
                 style={{ padding: "8px", borderRadius: "6px" }}
