@@ -142,6 +142,7 @@ function mergeSortSteps(arr, steps) {
   return merged;
 }
 
+
 function quickSortSteps(arr, steps) {
   if (arr.length <= 1) return arr;
 
@@ -163,6 +164,35 @@ function quickSortSteps(arr, steps) {
 
   return [...sortedLeft, ...equal, ...sortedRight];
 }
+
+// Moved algorithms config outside App component for cleaner architecture
+const algorithms = {
+  quickselect: {
+    name: "QuickSelect",
+    desc: "Efficient selection algorithm to find kth smallest element in O(n) average time.",
+    complexity: 50
+  },
+  sorting: {
+    name: "Sorting",
+    desc: "Sort the entire array and pick kth element. Simple but slower.",
+    complexity: 80
+  },
+  mergesort: {
+    name: "Merge Sort",
+    desc: "Divide and conquer algorithm with guaranteed O(n log n).",
+    complexity: 80
+  },
+  quicksort: {
+    name: "Quick Sort",
+    desc: "Fast average sorting but worst case O(n²).",
+    complexity: 90
+  },
+  bubblesort: {
+    name: "Bubble Sort",
+    desc: "Very simple but inefficient algorithm with O(n²).",
+    complexity: 150
+  }
+};
 
 export default function App() {
   const generateRandomArray = () => {
@@ -195,33 +225,6 @@ export default function App() {
 
   // NEW: algorithm state
   const [algorithm, setAlgorithm] = useState("quickselect");
-  const algorithms = {
-  quickselect: {
-    name: "QuickSelect",
-    desc: "Efficient selection algorithm to find kth smallest element in O(n) average time.",
-    complexity: 50
-  },
-  sorting: {
-    name: "Sorting",
-    desc: "Sort the entire array and pick kth element. Simple but slower.",
-    complexity: 80
-  },
-  mergesort: {
-    name: "Merge Sort",
-    desc: "Divide and conquer algorithm with guaranteed O(n log n).",
-    complexity: 80
-  },
-  quicksort: {
-    name: "Quick Sort",
-    desc: "Fast average sorting but worst case O(n²).",
-    complexity: 90
-  },
-  bubblesort: {
-    name: "Bubble Sort",
-    desc: "Very simple but inefficient algorithm with O(n²).",
-    complexity: 150
-  }
-};
 
   // NEW states for quiz system
   const [score, setScore] = useState(0);
