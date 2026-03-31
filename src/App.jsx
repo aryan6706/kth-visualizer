@@ -976,8 +976,16 @@ Time Complexity: O(n log n)`
             const colors = ["#22c55e", "#3b82f6", "#facc15", "#ef4444", "#a855f7"];
 
             return (
-              <div key={i} style={{ textAlign: "center" }}>
-
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  width: "120px"
+                }}
+              >
                 <div
                   title={`${algo.name} — ${
                     key === "quickselect"
@@ -1003,25 +1011,39 @@ Time Complexity: O(n log n)`
                     color: key === algorithm ? "black" : "white",
                     fontWeight: "bold",
                     transition: "height 0.4s ease, transform 0.2s ease",
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    margin: "0 auto"
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
                   onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                 ></div>
-                <div style={{ fontSize: "12px", color: "#cbd5f5", marginBottom: "6px" }}>
+                <div style={{
+                  fontSize: "12px",
+                  color: "#cbd5f5",
+                  marginTop: "4px",
+                  textAlign: "center",
+                  minHeight: "30px"
+                }}>
                   {key === "quickselect" && "O(n)"}
                   {key === "mergesort" && "O(n log n)"}
                   {key === "quicksort" && "O(n log n) avg / O(n²)"}
                   {key === "bubblesort" && "O(n²)"}
                   {key === "sorting" && "O(n log n)"}
                 </div>
-                <span style={{ fontSize: "14px", fontWeight: "600" }}>
+                <span style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  marginTop: "4px",
+                  textAlign: "center"
+                }}>
                   {algo.name}
                 </span>
                 <p style={{
                   fontSize: "11px",
                   color: "#94a3b8",
-                  marginTop: "4px"
+                  marginTop: "4px",
+                  textAlign: "center",
+                  minHeight: "28px"
                 }}>
                   {key === algorithm
                     ? "Selected"
@@ -1029,7 +1051,6 @@ Time Complexity: O(n log n)`
                         algo.complexity > algorithms[algorithm].complexity ? "slower" : "faster"
                       }`}
                 </p>
-
               </div>
             );
           })}
