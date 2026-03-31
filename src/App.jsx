@@ -868,7 +868,7 @@ Compare this with other algorithms in the graph below.`
 
       <h3 style={{ color: "#38bdf8" }}>Performance vs Input Size</h3>
 
-      <div style={{ display: "flex", justifyContent: "space-around", alignItems: "end", height: "200px" }}>
+      <div style={{ display: "flex", justifyContent: "space-around", alignItems: "end", height: "180px", overflow: "hidden" }}>
 
       {performanceData.map((point, i) => (
         <div key={i} style={{ textAlign: "center" }}>
@@ -876,19 +876,19 @@ Compare this with other algorithms in the graph below.`
           <div style={{ display: "flex", gap: "4px", alignItems: "end" }}>
 
             <div style={{
-              height: `${point.quickselect}px`,
+              height: `${Math.min(point.quickselect * 2, 150)}px`,
               width: "8px",
               background: "#22c55e"
             }} />
 
             <div style={{
-              height: `${point.mergesort / 2}px`,
+              height: `${Math.min(point.mergesort / 4, 150)}px`,
               width: "8px",
               background: "#3b82f6"
             }} />
 
             <div style={{
-              height: `${point.bubblesort / 20}px`,
+              height: `${Math.min(point.bubblesort / 40, 150)}px`,
               width: "8px",
               background: "#ef4444"
             }} />
