@@ -1,0 +1,57 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* FULL SCREEN FIX */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
+/* MAIN CONTAINER */
+.app-container {
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to bottom, #020617, #0f172a);
+  color: white;
+  font-family: system-ui;
+}
+
+/* INPUTS */
+.input-section {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.input-section input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+.input-section button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #22c55e;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* STEPS */
+.steps {
+  margin-top: 20px;
+}
+
+.step-card {
+  background: #1e293b;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
